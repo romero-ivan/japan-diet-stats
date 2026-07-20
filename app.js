@@ -64,6 +64,7 @@ const TRANSLATIONS = {
     viewMode: "Representación:",
     viewDots: "Puntos",
     viewBars: "Barras",
+    viewComparison: "Comparativa",
     viewRatio: "Representatividad",
     ratioType: "Tipo:",
     subWaffle: "Gofre",
@@ -151,6 +152,7 @@ const TRANSLATIONS = {
     viewMode: "Representation:",
     viewDots: "Dots",
     viewBars: "Bars",
+    viewComparison: "Comparison",
     viewRatio: "Representativeness",
     ratioType: "Type:",
     subWaffle: "Waffle",
@@ -238,6 +240,7 @@ const TRANSLATIONS = {
     viewMode: "表示モード:",
     viewDots: "ドット",
     viewBars: "グラフ",
+    viewComparison: "米国議会比較",
     viewRatio: "代表性比率",
     ratioType: "タイプ:",
     subWaffle: "格子",
@@ -563,6 +566,8 @@ function updateUILabels() {
   document.getElementById('lbl-view-mode').textContent = dict.viewMode;
   document.getElementById('lbl-view-dots').textContent = dict.viewDots;
   document.getElementById('lbl-view-bars').textContent = dict.viewBars;
+  const lblViewComparison = document.getElementById('lbl-view-comparison');
+  if (lblViewComparison) lblViewComparison.textContent = dict.viewComparison;
   document.getElementById('lbl-view-ratio').textContent = dict.viewRatio;
   
   // Ratio Sub-selector label
@@ -987,6 +992,77 @@ function getGenerationName(genInfo) {
 }
 
 function renderHistogram() {
+  const container = document.getElementById('histogram-container');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const dict = TRANSLATIONS[state.currentLang];
+  const total = state.filteredData.length;
+  if (total === 0) {
+    container.innerHTML = `<div style="margin: auto; color: var(--text-muted); font-size: 14px;">${dict.noResults}</div>`;
+    return;
+  }
+  
+  let brackets = [];
+  if (state.colorMode === 'generation') {
+    brackets = [
+      { key: 'silent', label: dict.lblSilent, color: '#8c1c1c', count: 0 },
+      { key: 'boomer', label: dict.lblBoomer, color: '#ef4444', count: 0 },
+      { key: 'x', label: dict.lblX, color: '#f97316', count: 0 },
+      { key: 'millennial', label: dict.lblMillennial, color: '#84cc16', count: 0 },
+      { key: 'z', label: dict.lblZ, color: '#06b6d4', count: 0 }
+    ];
+    
+    state.filteredData.forEach(m => {
+      if (m.age >= 81) brackets[0].count++;
+      else if (m.age >= 62) brackets[1].count++;
+      else if (m.age >= 46) brackets[2].count++;
+      else if (m.age >= 30) brackets[3].count++;
+      else brackets[4].count++;
+    });
+  } else {
+    brackets = [
+      { key: '70', label: dict.legend70, color: '#8c1c1c', count: 0 },
+      { key: '60', label: dict.legend60, color: '#ef4444', count: 0 },
+      { key: '50', label: dict.legend50, color: '#f97316', count: 0 },
+      { key: '40', label: dict.legend40, color: '#84cc16', count: 0 },
+      { key: '30', label: dict.legend30, color: '#06b6d4', count: 0 }
+    ];
+    
+    state.filteredData.forEach(m => {
+      if (m.age >= 70) brackets[0].count++;
+      else if (m.age >= 60) brackets[1].count++;
+      else if (m.age >= 50) brackets[2].count++;
+      else if (m.age >= 40) brackets[3].count++;
+      else brackets[4].count++;
+    });
+  }
+  
+  brackets.sort((a, b) => b.count - a.count);
+  
+  const maxCount = Math.max(...brackets.map(b => b.count)) || 1;
+  
+  brackets.forEach(b => {
+    const pct = total > 0 ? (b.count / total) * 100 : 0;
+    const heightPct = (b.count / maxCount) * 82; // Max height inside container is 82%
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'histo-bar-wrapper';
+    
+    wrapper.innerHTML = `
+      <div class="histo-bar" style="height: ${heightPct}%; background-color: ${b.color};" title="${b.label}: ${b.count} escaños">
+        <div class="histo-bar-value-inside">
+          <span class="histo-num-top">${b.count}</span>
+          <span class="histo-pct-center">${pct.toFixed(0)}%</span>
+        </div>
+        <span class="histo-bar-label">${b.label}</span>
+      </div>
+    `;
+    container.appendChild(wrapper);
+  });
+}
+
+function renderComparisonHistogram() {
   const container = document.getElementById('histogram-container');
   if (!container) return;
   container.innerHTML = '';
@@ -1485,6 +1561,22 @@ function applyFiltersAndRender() {
       histoEl.style.height = '270px';
       renderHistogram();
     }
+    
+    if (state.colorMode === 'generation') {
+      document.getElementById('legend-age-view').style.display = 'none';
+      document.getElementById('legend-generation-view').style.display = 'flex';
+    } else {
+      document.getElementById('legend-age-view').style.display = 'flex';
+      document.getElementById('legend-generation-view').style.display = 'none';
+    }
+    document.getElementById('legend-histogram-view').style.display = 'none';
+  } else if (state.viewMode === 'comparison') {
+    if (svgEl) svgEl.style.display = 'none';
+    if (histoEl) {
+      histoEl.style.display = 'flex';
+      histoEl.style.height = '270px';
+      renderComparisonHistogram();
+    }
     document.getElementById('legend-age-view').style.display = 'none';
     document.getElementById('legend-generation-view').style.display = 'none';
     document.getElementById('legend-histogram-view').style.display = 'flex';
@@ -1733,6 +1825,8 @@ function initEventListeners() {
       // Re-render display based on viewMode
       if (state.viewMode === 'bars') {
         renderHistogram();
+      } else if (state.viewMode === 'comparison') {
+        renderComparisonHistogram();
       } else if (state.viewMode === 'ratio') {
         renderRatioChart();
       } else {
