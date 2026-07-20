@@ -51,6 +51,8 @@ const TRANSLATIONS = {
     legend50: "50-59 años",
     legend40: "40-49 años",
     legend30: "<40 años",
+    legendUs1983: "Congreso EE.UU. (1983)",
+    legendJpDiet: "Dieta de Japón (Filtrado)",
     colorMode: "Colorear por:",
     modeAge: "Rango de Edad",
     modeGen: "Generaciones",
@@ -136,6 +138,8 @@ const TRANSLATIONS = {
     legend50: "50-59 years",
     legend40: "40-49 years",
     legend30: "<40 years",
+    legendUs1983: "US Congress (1983)",
+    legendJpDiet: "Japan Diet (Filtered)",
     colorMode: "Color by:",
     modeAge: "Age Range",
     modeGen: "Generations",
@@ -221,6 +225,8 @@ const TRANSLATIONS = {
     legend50: "50-59歳",
     legend40: "40-49歳",
     legend30: "40歳未満",
+    legendUs1983: "米国議会 (1983年)",
+    legendJpDiet: "日本国会 (フィルター適用済)",
     colorMode: "色分け基準:",
     modeAge: "年齢層",
     modeGen: "世代別",
@@ -538,6 +544,8 @@ function updateUILabels() {
   document.getElementById('lbl-legend-50').textContent = dict.legend50;
   document.getElementById('lbl-legend-40').textContent = dict.legend40;
   document.getElementById('lbl-legend-30').textContent = dict.legend30;
+  document.getElementById('lbl-legend-us-1983').textContent = dict.legendUs1983;
+  document.getElementById('lbl-legend-jp-diet').textContent = dict.legendJpDiet;
   
   // Color Mode Toggles
   document.getElementById('lbl-color-mode').textContent = dict.colorMode;
@@ -990,60 +998,70 @@ function renderHistogram() {
     return;
   }
   
-  let brackets = [];
-  if (state.colorMode === 'generation') {
-    brackets = [
-      { key: 'silent', label: dict.lblSilent, color: '#8c1c1c', count: 0 },
-      { key: 'boomer', label: dict.lblBoomer, color: '#ef4444', count: 0 },
-      { key: 'x', label: dict.lblX, color: '#f97316', count: 0 },
-      { key: 'millennial', label: dict.lblMillennial, color: '#84cc16', count: 0 },
-      { key: 'z', label: dict.lblZ, color: '#06b6d4', count: 0 }
-    ];
-    
-    state.filteredData.forEach(m => {
-      if (m.age >= 81) brackets[0].count++;
-      else if (m.age >= 62) brackets[1].count++;
-      else if (m.age >= 46) brackets[2].count++;
-      else if (m.age >= 30) brackets[3].count++;
-      else brackets[4].count++;
-    });
-  } else {
-    brackets = [
-      { key: '70', label: dict.legend70, color: '#8c1c1c', count: 0 },
-      { key: '60', label: dict.legend60, color: '#ef4444', count: 0 },
-      { key: '50', label: dict.legend50, color: '#f97316', count: 0 },
-      { key: '40', label: dict.legend40, color: '#84cc16', count: 0 },
-      { key: '30', label: dict.legend30, color: '#06b6d4', count: 0 }
-    ];
-    
-    state.filteredData.forEach(m => {
-      if (m.age >= 70) brackets[0].count++;
-      else if (m.age >= 60) brackets[1].count++;
-      else if (m.age >= 50) brackets[2].count++;
-      else if (m.age >= 40) brackets[3].count++;
-      else brackets[4].count++;
-    });
-  }
+  // Baseline US Congress 1983 percentages from Image 1
+  const us1983 = {
+    '25-29': 0.6,
+    '30-34': 4.0,
+    '35-39': 8.4,
+    '40-44': 17.9,
+    '45-49': 14.6,
+    '50-54': 18.2,
+    '55-59': 15.5,
+    '60-64': 9.3,
+    '65-69': 6.0,
+    '70-74': 4.3,
+    '75-79': 0.6,
+    '80-84': 0.8,
+    '85-89': 0.0,
+    '90-94': 0.0,
+    '95+': 0.0
+  };
+
+  const bins = ['25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80-84', '85-89', '90-94', '95+'];
   
-  brackets.sort((a, b) => b.count - a.count);
-  
-  const maxCount = Math.max(...brackets.map(b => b.count)) || 1;
-  
-  brackets.forEach(b => {
-    const pct = total > 0 ? (b.count / total) * 100 : 0;
-    const heightPct = (b.count / maxCount) * 82; // Max height inside container is 82%
-    
+  const jpCounts = {};
+  bins.forEach(bin => { jpCounts[bin] = 0; });
+
+  state.filteredData.forEach(m => {
+    const age = m.age;
+    for (let i = 0; i < bins.length; i++) {
+      const bin = bins[i];
+      if (bin === '95+') {
+        if (age >= 95) {
+          jpCounts[bin]++;
+          break;
+        }
+      } else {
+        const [low, high] = bin.split('-').map(Number);
+        if (age >= low && age <= high) {
+          jpCounts[bin]++;
+          break;
+        }
+      }
+    }
+  });
+
+  const maxVal = 20; // 20% max on visual scale to match the 20% axis of the image
+
+  bins.forEach(bin => {
+    const usPct = us1983[bin] || 0;
+    const jpPct = total > 0 ? (jpCounts[bin] / total) * 100 : 0;
+
+    const usHeight = (usPct / maxVal) * 100;
+    const jpHeight = (jpPct / maxVal) * 100;
+
     const wrapper = document.createElement('div');
     wrapper.className = 'histo-bar-wrapper';
     
+    // Label for axis
+    const axisLabel = bin === '95+' ? '95+' : bin.split('-')[0];
+
     wrapper.innerHTML = `
-      <div class="histo-bar" style="height: ${heightPct}%; background-color: ${b.color};" title="${b.label}: ${b.count} escaños">
-        <div class="histo-bar-value-inside">
-          <span class="histo-num-top">${b.count}</span>
-          <span class="histo-pct-center">${pct.toFixed(0)}%</span>
-        </div>
-        <span class="histo-bar-label">${b.label}</span>
+      <div class="histo-bars-pair">
+        <div class="histo-bar us-series" style="height: ${usHeight}%;" title="US Congress 1983 (${bin}): ${usPct.toFixed(1)}%"></div>
+        <div class="histo-bar jp-series" style="height: ${jpHeight}%;" title="Japan Diet (${bin}): ${jpPct.toFixed(1)}% (${jpCounts[bin]} escaños)"></div>
       </div>
+      <span class="histo-bar-label">${axisLabel}</span>
     `;
     container.appendChild(wrapper);
   });
@@ -1467,6 +1485,9 @@ function applyFiltersAndRender() {
       histoEl.style.height = '270px';
       renderHistogram();
     }
+    document.getElementById('legend-age-view').style.display = 'none';
+    document.getElementById('legend-generation-view').style.display = 'none';
+    document.getElementById('legend-histogram-view').style.display = 'flex';
   } else if (state.viewMode === 'ratio') {
     if (svgEl) svgEl.style.display = 'none';
     if (histoEl) {
@@ -1474,9 +1495,22 @@ function applyFiltersAndRender() {
       histoEl.style.height = 'auto';
       renderRatioChart();
     }
+    document.getElementById('legend-age-view').style.display = 'none';
+    document.getElementById('legend-generation-view').style.display = 'none';
+    document.getElementById('legend-histogram-view').style.display = 'none';
   } else {
     if (svgEl) svgEl.style.display = 'block';
     if (histoEl) histoEl.style.display = 'none';
+    
+    if (state.colorMode === 'generation') {
+      document.getElementById('legend-age-view').style.display = 'none';
+      document.getElementById('legend-generation-view').style.display = 'flex';
+    } else {
+      document.getElementById('legend-age-view').style.display = 'flex';
+      document.getElementById('legend-generation-view').style.display = 'none';
+    }
+    document.getElementById('legend-histogram-view').style.display = 'none';
+    
     renderHemicircle();
   }
 
