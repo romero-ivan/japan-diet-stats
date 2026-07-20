@@ -76,8 +76,12 @@ const TRANSLATIONS = {
     currencySelector: "Moneda:",
     conceptMarketTitle: "Ingreso Inicial (Antes de transferencias)",
     conceptMarketDesc: "Ingresos por trabajo, negocios, rentas, pensiones privadas, etc.",
+    conceptGrossTitle: "Ingreso Bruto",
+    conceptGrossDesc: "Ingreso inicial más pensiones públicas y transferencias de efectivo.",
+    conceptDisposableTitle: "Ingreso Disponible",
+    conceptDisposableDesc: "Ingreso bruto menos impuestos directos y cotizaciones a la seguridad social.",
     conceptExtendedTitle: "Ingreso Redistribuido (Después de transferencias)",
-    conceptExtendedDesc: "Ingreso inicial menos impuestos y seguridad social, sumando prestaciones en efectivo y especie.",
+    conceptExtendedDesc: "Ingreso disponible más transferencias en especie (salud y educación públicas).",
     incomeDataSource: "Datos de ingresos equivalentes reales. Fuente: <a href=\"https://www.mhlw.go.jp/stf/houdou/96-1_r03kekka.html\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">«Encuesta sobre la Redistribución de Ingresos» del Ministerio de Salud, Trabajo y Bienestar de Japón (令和3年 / 2021)</a>."
   },
   en: {
@@ -157,8 +161,12 @@ const TRANSLATIONS = {
     currencySelector: "Currency:",
     conceptMarketTitle: "Initial Income (Before transfers)",
     conceptMarketDesc: "Income from employment, business, property, private pensions, etc.",
+    conceptGrossTitle: "Gross Income",
+    conceptGrossDesc: "Initial income plus public pensions and cash benefits.",
+    conceptDisposableTitle: "Disposable Income",
+    conceptDisposableDesc: "Gross income minus taxes and social security contributions.",
     conceptExtendedTitle: "Redistributed Income (After transfers)",
-    conceptExtendedDesc: "Initial income minus taxes and social insurance, plus cash and in-kind benefits.",
+    conceptExtendedDesc: "Disposable income plus in-kind services (healthcare and education).",
     incomeDataSource: "Real equivalent income data. Source: <a href=\"https://www.mhlw.go.jp/stf/houdou/96-1_r03kekka.html\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">'Income Redistribution Survey', Ministry of Health, Labour and Welfare of Japan (2021)</a>."
   },
   ja: {
@@ -238,8 +246,12 @@ const TRANSLATIONS = {
     currencySelector: "表示通貨：",
     conceptMarketTitle: "当初所得",
     conceptMarketDesc: "雇用者所得、事業所得、農耕・畜産所得、財産所得、家内労働所得及び雑所得並びに私的給付の合計額。",
+    conceptGrossTitle: "総所得",
+    conceptGrossDesc: "当初所得に公的年金や雇用保険等の現金給付を加えたもの。",
+    conceptDisposableTitle: "可処分所得",
+    conceptDisposableDesc: "総所得から税金・社会保険料を差し引いた手取り所得。",
     conceptExtendedTitle: "再分配所得",
-    conceptExtendedDesc: "当初所得から税金・社会保険料を差し引き、社会保障給付（現金給付・現物給付）を加えたもの。",
+    conceptExtendedDesc: "当初所得から税金・社会保険料を差し引き、社会保障給付（現金給付・現物給付）を加えたもの（再分配所得）。",
     incomeDataSource: "等価所得ベースの実データ。出典：<a href=\"https://www.mhlw.go.jp/stf/houdou/96-1_r03kekka.html\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">厚生労働省「令和３年所得再分配調査」</a>に基づく統計推計。"
   }
 };
@@ -570,6 +582,14 @@ function updateUILabels() {
   if (lblConceptMarketTitle) lblConceptMarketTitle.textContent = dict.conceptMarketTitle;
   const lblConceptMarketDesc = document.getElementById('lbl-concept-market-desc');
   if (lblConceptMarketDesc) lblConceptMarketDesc.textContent = dict.conceptMarketDesc;
+  const lblConceptGrossTitle = document.getElementById('lbl-concept-gross-title');
+  if (lblConceptGrossTitle) lblConceptGrossTitle.textContent = dict.conceptGrossTitle;
+  const lblConceptGrossDesc = document.getElementById('lbl-concept-gross-desc');
+  if (lblConceptGrossDesc) lblConceptGrossDesc.textContent = dict.conceptGrossDesc;
+  const lblConceptDisposableTitle = document.getElementById('lbl-concept-disposable-title');
+  if (lblConceptDisposableTitle) lblConceptDisposableTitle.textContent = dict.conceptDisposableTitle;
+  const lblConceptDisposableDesc = document.getElementById('lbl-concept-disposable-desc');
+  if (lblConceptDisposableDesc) lblConceptDisposableDesc.textContent = dict.conceptDisposableDesc;
   const lblConceptExtendedTitle = document.getElementById('lbl-concept-extended-title');
   if (lblConceptExtendedTitle) lblConceptExtendedTitle.textContent = dict.conceptExtendedTitle;
   const lblConceptExtendedDesc = document.getElementById('lbl-concept-extended-desc');
@@ -606,6 +626,32 @@ const JAPAN_INCOME_DATA = {
     '70-74': 2422000,
     '75+': 1523000
   },
+  gross: {
+    '≤29': 4151000,
+    '30-34': 5525000,
+    '35-39': 7030000,
+    '40-44': 7594000,
+    '45-49': 7828000,
+    '50-54': 7666000,
+    '55-59': 7893000,
+    '60-64': 6636000,
+    '65-69': 4739000,
+    '70-74': 4648000,
+    '75+': 3665000
+  },
+  disposable: {
+    '≤29': 3347000,
+    '30-34': 4409000,
+    '35-39': 5449000,
+    '40-44': 5830000,
+    '45-49': 5979000,
+    '50-54': 5809000,
+    '55-59': 6003000,
+    '60-64': 5085000,
+    '65-69': 3978000,
+    '70-74': 3916000,
+    '75+': 3154000
+  },
   extended: {
     '≤29': 3465000,
     '30-34': 4748000,
@@ -641,10 +687,10 @@ function renderIncomeDistribution() {
   const currency = state.activeCurrency;
   const lang = state.currentLang;
   
-  // Benchmark max to make all bars in both cards comparable (max in table is 7,658,000)
+  // Benchmark max to make all bars in both cards comparable (max in table is 7,893,000)
   const maxScaleVal = 8000000;
   
-  const concepts = ['market', 'extended'];
+  const concepts = ['market', 'gross', 'disposable', 'extended'];
   
   concepts.forEach(concept => {
     const container = document.getElementById(`${concept}-income-bars`);
