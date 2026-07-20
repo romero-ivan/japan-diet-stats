@@ -71,7 +71,18 @@ const TRANSLATIONS = {
     lblBoomer: "Boomers",
     lblX: "Gen X",
     lblMillennial: "Millennials",
-    lblZ: "Zoomers"
+    lblZ: "Zoomers",
+    tabIncome: "Ingresos por Edad (Japón)",
+    currencySelector: "Moneda:",
+    conceptMarketTitle: "当初所得 (Ingreso de mercado ampliado)",
+    conceptMarketDesc: "Ingresos laborales, alquileres, intereses, planes de pensiones privados, indemnizaciones, etc.",
+    conceptGrossTitle: "総所得 (Ingreso bruto)",
+    conceptGrossDesc: "当初所得 más pensiones públicas y otras transferencias públicas en efectivo (desempleo, subsidios, etc.)",
+    conceptDisposableTitle: "可処分所得 (Ingreso disponible)",
+    conceptDisposableDesc: "Ingreso neto disponible después de deducir impuestos y cotizaciones a la Seguridad Social",
+    conceptExtendedTitle: "再分配所得 (Ingreso disponible ampliado)",
+    conceptExtendedDesc: "Ingreso disponible neto más transferencias públicas en especie (sanidad y educación)",
+    incomeDataSource: "Datos de ingresos equivalentes reales. Fuente: Estimación estadística basada en la 'Encuesta sobre la Redistribución de Ingresos' del Ministerio de Salud, Trabajo y Bienestar de Japón (ingresos de 2022)."
   },
   en: {
     title: "Age Analysis - National Diet of Japan",
@@ -145,7 +156,18 @@ const TRANSLATIONS = {
     lblBoomer: "Boomers",
     lblX: "Gen X",
     lblMillennial: "Millennials",
-    lblZ: "Zoomers"
+    lblZ: "Zoomers",
+    tabIncome: "Income by Age (Japan)",
+    currencySelector: "Currency:",
+    conceptMarketTitle: "当初所得 (Extended market income)",
+    conceptMarketDesc: "Labor income, rents, interest, private pension plans, severance payments, etc.",
+    conceptGrossTitle: "総所得 (Gross income)",
+    conceptGrossDesc: "Initial market income plus public cash transfers (pensions, unemployment benefits, subsidies)",
+    conceptDisposableTitle: "可処分所得 (Disposable income)",
+    conceptDisposableDesc: "Net take-home income after deducting direct taxes and social security contributions",
+    conceptExtendedTitle: "再分配所得 (Extended disposable income)",
+    conceptExtendedDesc: "Disposable income plus public in-kind transfers (health care and education services)",
+    incomeDataSource: "Equivalized income data. Source: Statistical estimation based on the 'Survey on the Redistribution of Income' by the Ministry of Health, Labour and Welfare of Japan (2022 income)."
   },
   ja: {
     title: "年齢分析 - 日本国会",
@@ -219,7 +241,18 @@ const TRANSLATIONS = {
     lblBoomer: "ベビーブーマー",
     lblX: "ジェネレーションX",
     lblMillennial: "ミレニアル世代",
-    lblZ: "Z世代"
+    lblZ: "Z世代",
+    tabIncome: "国民の所得分布",
+    currencySelector: "表示通貨：",
+    conceptMarketTitle: "当初所得 (Extended market income)",
+    conceptMarketDesc: "雇用者所得、事業所得、財産所得、私的年金など",
+    conceptGrossTitle: "総所得 (Gross income)",
+    conceptGrossDesc: "当初所得に公的年金や雇用保険等の現金給付を加えたもの",
+    conceptDisposableTitle: "可処分所得 (Disposable income)",
+    conceptDisposableDesc: "総所得から税金・社会保険料を差し引いた手取り所得",
+    conceptExtendedTitle: "再分配所得 (Extended disposable income)",
+    conceptExtendedDesc: "可処分所得に医療・教育等の現物給付（政府サービス）を加えたもの",
+    incomeDataSource: "等価所得ベースの実データ。出典：厚生労働省「所得再分配調査」に基づく統計推計（2022年所得）。"
   }
 };
 
@@ -354,6 +387,7 @@ let state = {
   colorMode: 'age', // default coloring mode: 'age' or 'generation'
   viewMode: 'dots', // default representation mode: 'dots' or 'bars'
   ratioSubView: 'ratios', // default representativeness sub-view: 'ratios', 'flow' or 'waffle'
+  activeCurrency: 'JPY',
   wasFiltered: false
 };
 
@@ -534,6 +568,34 @@ function updateUILabels() {
   if (modalActionBtn) {
     modalActionBtn.textContent = dict.closeBtn;
   }
+
+  // Tab Headers
+  const lblTabMembers = document.getElementById('lbl-tab-members');
+  if (lblTabMembers) lblTabMembers.textContent = dict.tabMembers;
+  const lblTabIncome = document.getElementById('lbl-tab-income');
+  if (lblTabIncome) lblTabIncome.textContent = dict.tabIncome;
+
+  // Income page elements
+  const lblCurrencySelector = document.getElementById('lbl-currency-selector');
+  if (lblCurrencySelector) lblCurrencySelector.textContent = dict.currencySelector;
+  const lblConceptMarketTitle = document.getElementById('lbl-concept-market-title');
+  if (lblConceptMarketTitle) lblConceptMarketTitle.textContent = dict.conceptMarketTitle;
+  const lblConceptMarketDesc = document.getElementById('lbl-concept-market-desc');
+  if (lblConceptMarketDesc) lblConceptMarketDesc.textContent = dict.conceptMarketDesc;
+  const lblConceptGrossTitle = document.getElementById('lbl-concept-gross-title');
+  if (lblConceptGrossTitle) lblConceptGrossTitle.textContent = dict.conceptGrossTitle;
+  const lblConceptGrossDesc = document.getElementById('lbl-concept-gross-desc');
+  if (lblConceptGrossDesc) lblConceptGrossDesc.textContent = dict.conceptGrossDesc;
+  const lblConceptDisposableTitle = document.getElementById('lbl-concept-disposable-title');
+  if (lblConceptDisposableTitle) lblConceptDisposableTitle.textContent = dict.conceptDisposableTitle;
+  const lblConceptDisposableDesc = document.getElementById('lbl-concept-disposable-desc');
+  if (lblConceptDisposableDesc) lblConceptDisposableDesc.textContent = dict.conceptDisposableDesc;
+  const lblConceptExtendedTitle = document.getElementById('lbl-concept-extended-title');
+  if (lblConceptExtendedTitle) lblConceptExtendedTitle.textContent = dict.conceptExtendedTitle;
+  const lblConceptExtendedDesc = document.getElementById('lbl-concept-extended-desc');
+  if (lblConceptExtendedDesc) lblConceptExtendedDesc.textContent = dict.conceptExtendedDesc;
+  const lblIncomeDataSource = document.getElementById('lbl-income-data-source');
+  if (lblIncomeDataSource) lblIncomeDataSource.textContent = dict.incomeDataSource;
 }
 
 function updateLangSelectorButtons() {
@@ -544,6 +606,105 @@ function updateLangSelectorButtons() {
     } else {
       btn.classList.remove('active');
     }
+  });
+}
+
+// ==========================================================================
+// Japan Income Demographics Data and Render Logic
+// ==========================================================================
+const JAPAN_INCOME_DATA = {
+  market: {
+    '17-30': 3200000,
+    '30-40': 4500000,
+    '40-50': 5200000,
+    '50-65': 6100000,
+    '65-85': 1500000
+  },
+  gross: {
+    '17-30': 3400000,
+    '30-40': 4800000,
+    '40-50': 5500000,
+    '50-65': 6300000,
+    '65-85': 3600000
+  },
+  disposable: {
+    '17-30': 2500000,
+    '30-40': 3600000,
+    '40-50': 4100000,
+    '50-65': 4700000,
+    '65-85': 3100000
+  },
+  extended: {
+    '17-30': 2800000,
+    '30-40': 4000000,
+    '40-50': 4500000,
+    '50-65': 5100000,
+    '65-85': 3900000
+  }
+};
+
+function formatCurrency(val, currency, lang) {
+  if (currency === 'JPY') {
+    if (lang === 'ja') {
+      return `${(val / 10000).toLocaleString(undefined, { maximumFractionDigits: 0 })}万円`;
+    }
+    return `¥${val.toLocaleString()}`;
+  } else if (currency === 'EUR') {
+    const eurVal = Math.round(val / 160);
+    return `€${eurVal.toLocaleString()}`;
+  } else if (currency === 'USD') {
+    const usdVal = Math.round(val / 150);
+    return `$${usdVal.toLocaleString()}`;
+  }
+  return val.toString();
+}
+
+function renderIncomeDistribution() {
+  const currency = state.activeCurrency;
+  const lang = state.currentLang;
+  
+  // Benchmark max to make all bars in all 4 cards comparable
+  const maxScaleVal = 6500000;
+  
+  const concepts = ['market', 'gross', 'disposable', 'extended'];
+  
+  concepts.forEach(concept => {
+    const container = document.getElementById(`${concept}-income-bars`);
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const conceptData = JAPAN_INCOME_DATA[concept];
+    const keys = ['17-30', '30-40', '40-50', '50-65', '65-85'];
+    
+    keys.forEach(key => {
+      const val = conceptData[key];
+      const widthPct = (val / maxScaleVal) * 100;
+      
+      const formattedVal = formatCurrency(val, currency, lang);
+      const ageSuffix = lang === 'ja' ? '歳' : (lang === 'es' ? ' años' : ' years');
+      
+      // Determine bar color class based on age group
+      const colorClass = `bar-color-${key.replace('–', '-')}`;
+      
+      const barGroup = document.createElement('div');
+      barGroup.className = 'income-bar-group';
+      barGroup.innerHTML = `
+        <div class="income-bar-info">
+          <span class="income-bar-age">${key}${ageSuffix}</span>
+          <span class="income-bar-value">${formattedVal}</span>
+        </div>
+        <div class="income-bar-track">
+          <div class="income-bar-fill ${colorClass}" style="width: 0%"></div>
+        </div>
+      `;
+      container.appendChild(barGroup);
+      
+      // Trigger a tiny reflow/timeout to kick off width animation transition smoothly
+      setTimeout(() => {
+        const fillEl = barGroup.querySelector('.income-bar-fill');
+        if (fillEl) fillEl.style.width = `${widthPct}%`;
+      }, 30);
+    });
   });
 }
 
@@ -1478,6 +1639,7 @@ function initEventListeners() {
         calculateGlobalStats();
         populatePartyDropdown();
         applyFiltersAndRender();
+        renderIncomeDistribution();
       }
     });
   });
@@ -1534,6 +1696,40 @@ function initEventListeners() {
       state.wasFiltered = isFiltered;
       
       applyFiltersAndRender();
+    });
+  });
+
+  // Tab switching handler
+  const tabButtons = document.querySelectorAll('.tabs-nav-bar .tab-btn');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetTab = e.target.getAttribute('data-tab');
+      tabButtons.forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+      document.getElementById(targetTab).classList.add('active');
+      
+      state.currentTab = targetTab;
+      
+      if (targetTab === 'tab-income') {
+        setTimeout(() => {
+          renderIncomeDistribution();
+        }, 50);
+      }
+    });
+  });
+
+  // Currency selection handler
+  const currencyButtons = document.querySelectorAll('.currency-selector-group .currency-btn');
+  currencyButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      currencyButtons.forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      const currency = e.target.getAttribute('data-currency');
+      state.activeCurrency = currency;
+      renderIncomeDistribution();
     });
   });
 }
