@@ -1693,12 +1693,12 @@ th.sortable.active.desc .sort-icon::after {
   margin: 0;
 }
 
-/* Specific colors for Fedea visual match */
-.bar-color-17-30 { background-color: #1e293b; } /* Dark charcoal */
-.bar-color-30-40 { background-color: #0284c7; } /* Royal blue */
-.bar-color-40-50 { background-color: #38bdf8; } /* Sky blue */
-.bar-color-50-65 { background-color: #d97706; } /* Gold/Amber */
-.bar-color-65-85 { background-color: #991b1b; } /* Crimson/Terracotta */
+/* Colors aligned with Diet page age cohorts */
+.bar-color-17-30 { background-color: #06b6d4; } /* Cyan (<40 cohort) */
+.bar-color-30-40 { background-color: #0284c7; } /* Royal Blue (transition cohort) */
+.bar-color-40-50 { background-color: #84cc16; } /* Green (40-49 cohort) */
+.bar-color-50-65 { background-color: #f97316; } /* Orange (50-59 cohort) */
+.bar-color-65-85 { background-color: #8c1c1c; } /* Dark Red (60+ cohort) */
 
 /* iPhone/Safari view enhancements for mobile */
 @media (max-width: 600px) {
