@@ -1,8 +1,7 @@
-// Multilingual Translation Dictionary
 const TRANSLATIONS = {
   es: {
-    title: "Análisis de Edades — Dieta Nacional de Japón",
-    appTitle: "日本国会",
+    title: "Análisis de Edades - Dieta Nacional de Japón",
+    appTitle: "Dieta Nacional",
     appSubtitle: "Análisis demográfico y de edad de los miembros de la Dieta Nacional de Japón",
     dateBadge: "A fecha de hoy: 19 de julio de 2026",
     statTotal: "Total analizado",
@@ -10,9 +9,9 @@ const TRANSLATIONS = {
     statAvg: "Edad Media",
     statAvgMeta: "años de edad",
     statYoung: "Más joven",
-    statYoungMeta: "{age} años — {party}",
+    statYoungMeta: "{age} años - {party}",
     statOld: "Más viejo",
-    statOldMeta: "{age} años — {party}",
+    statOldMeta: "{age} años - {party}",
     searchPlaceholder: "Buscar parlamentario por nombre o partido...",
     chamber: "Cámara:",
     chamberAll: "Todas",
@@ -65,10 +64,15 @@ const TRANSLATIONS = {
     ratioType: "Tipo:",
     subWaffle: "Gofre",
     subFlow: "Flujo",
-    subCards: "Ratio de representación"
+    subCards: "Ratio de representación",
+    lblSilent: "Gen. Silenciosa",
+    lblBoomer: "Boomers",
+    lblX: "Gen X",
+    lblMillennial: "Millennials",
+    lblZ: "Zoomers"
   },
   en: {
-    title: "Age Analysis — National Diet of Japan",
+    title: "Age Analysis - National Diet of Japan",
     appTitle: "National Diet",
     appSubtitle: "Demographic and age analysis of members of the National Diet of Japan",
     dateBadge: "As of today: July 19, 2026",
@@ -77,9 +81,9 @@ const TRANSLATIONS = {
     statAvg: "Average Age",
     statAvgMeta: "years old",
     statYoung: "Youngest",
-    statYoungMeta: "{age} years — {party}",
+    statYoungMeta: "{age} years - {party}",
     statOld: "Oldest",
-    statOldMeta: "{age} years — {party}",
+    statOldMeta: "{age} years - {party}",
     searchPlaceholder: "Search member by name or party...",
     chamber: "Chamber:",
     chamberAll: "All",
@@ -132,21 +136,26 @@ const TRANSLATIONS = {
     ratioType: "Type:",
     subWaffle: "Waffle",
     subFlow: "Flow",
-    subCards: "Representation Ratio"
+    subCards: "Representation Ratio",
+    lblSilent: "Silent Gen",
+    lblBoomer: "Boomers",
+    lblX: "Gen X",
+    lblMillennial: "Millennials",
+    lblZ: "Zoomers"
   },
   ja: {
-    title: "年齢分析 — 日本国会",
+    title: "年齢分析 - 日本国会",
     appTitle: "日本国会",
     appSubtitle: "日本国会（衆議院・参議院）議員の年齢および人口統計分析",
     dateBadge: "現在：2026年7月19日",
     statTotal: "分析対象数",
-    statTotalMeta: "全議席의 약98%",
+    statTotalMeta: "全議席の約98%",
     statAvg: "平均年齢",
     statAvgMeta: "歳",
     statYoung: "最年少",
-    statYoungMeta: "{age}歳 — {party}",
+    statYoungMeta: "{age}歳 - {party}",
     statOld: "最年長",
-    statOldMeta: "{age}歳 — {party}",
+    statOldMeta: "{age}歳 - {party}",
     searchPlaceholder: "議員名または政党名で検索...",
     chamber: "議院:",
     chamberAll: "すべて",
@@ -199,7 +208,12 @@ const TRANSLATIONS = {
     ratioType: "タイプ:",
     subWaffle: "格子",
     subFlow: "流路",
-    subCards: "代表比率"
+    subCards: "代表比率",
+    lblSilent: "サイレント世代",
+    lblBoomer: "ベビーブーマー",
+    lblX: "ジェネレーションX",
+    lblMillennial: "ミレニアル世代",
+    lblZ: "Z世代"
   }
 };
 
@@ -884,11 +898,11 @@ function renderHistogram() {
   let brackets = [];
   if (state.colorMode === 'generation') {
     brackets = [
-      { key: 'silent', label: dict.genSilent.split(' ')[0], color: '#8c1c1c', count: 0 },
-      { key: 'boomer', label: 'Boomers', color: '#ef4444', count: 0 },
-      { key: 'x', label: 'Gen X', color: '#f97316', count: 0 },
-      { key: 'millennial', label: 'Millennials', color: '#84cc16', count: 0 },
-      { key: 'z', label: 'Zoomers', color: '#06b6d4', count: 0 }
+      { key: 'silent', label: dict.lblSilent, color: '#8c1c1c', count: 0 },
+      { key: 'boomer', label: dict.lblBoomer, color: '#ef4444', count: 0 },
+      { key: 'x', label: dict.lblX, color: '#f97316', count: 0 },
+      { key: 'millennial', label: dict.lblMillennial, color: '#84cc16', count: 0 },
+      { key: 'z', label: dict.lblZ, color: '#06b6d4', count: 0 }
     ];
     
     state.filteredData.forEach(m => {
@@ -973,11 +987,11 @@ function renderRatioChart() {
   let brackets = [];
   if (state.colorMode === 'generation') {
     brackets = [
-      { key: 'silent', label: dict.genSilent.split(' ')[0], color: '#8c1c1c', popShare: 0.1016, count: 0 },
-      { key: 'boomer', label: 'Boomers', color: '#ef4444', popShare: 0.2870, count: 0 },
-      { key: 'x', label: 'Gen X', color: '#f97316', popShare: 0.2743, count: 0 },
-      { key: 'millennial', label: 'Millennials', color: '#84cc16', popShare: 0.2191, count: 0 },
-      { key: 'z', label: 'Zoomers', color: '#06b6d4', popShare: 0.1181, count: 0 }
+      { key: 'silent', label: dict.lblSilent, color: '#8c1c1c', popShare: 0.1016, count: 0 },
+      { key: 'boomer', label: dict.lblBoomer, color: '#ef4444', popShare: 0.2870, count: 0 },
+      { key: 'x', label: dict.lblX, color: '#f97316', popShare: 0.2743, count: 0 },
+      { key: 'millennial', label: dict.lblMillennial, color: '#84cc16', popShare: 0.2191, count: 0 },
+      { key: 'z', label: dict.lblZ, color: '#06b6d4', popShare: 0.1181, count: 0 }
     ];
     
     state.filteredData.forEach(m => {
@@ -1245,7 +1259,7 @@ function showHemicircleTooltip(e, m, x, y) {
   
   tooltip.innerHTML = `
     <div class="tooltip-name">${name} (${partyAbbr})</div>
-    <div class="tooltip-party">${ageAndInfo} — ${chamberLabel}</div>
+    <div class="tooltip-party">${ageAndInfo} - ${chamberLabel}</div>
   `;
   tooltip.style.display = 'block';
   tooltip.style.left = `${(x / 600) * 100}%`;
