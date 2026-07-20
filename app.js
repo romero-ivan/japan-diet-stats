@@ -35,7 +35,7 @@ const TRANSLATIONS = {
     thDob: "Nacimiento",
     thChamber: "Cámara",
     thParty: "Partido Político",
-    footerText: "Datos de ingresos: Encuesta sobre la Redistribución de Ingresos (MHLW). Datos de edad: Registros de la Dieta de Japón (Shugiin y Sangiin).",
+    footerText: "Datos de ingresos: <a href='https://www.mhlw.go.jp/stf/houdou/96-1_r03kekka.html' target='_blank' class='wiki-link' style='text-decoration: underline;'>Encuesta sobre la Redistribución de Ingresos (MHLW)</a>. Datos de edad: <a href='https://www.shugiin.go.jp/' target='_blank' class='wiki-link' style='text-decoration: underline;'>Shugiin</a> y <a href='https://www.sangiin.go.jp/' target='_blank' class='wiki-link' style='text-decoration: underline;'>Sangiin</a>. Participación: <a href='https://www.soumu.go.jp/senkyo/' target='_blank' class='wiki-link' style='text-decoration: underline;'>Ministerio de Asuntos Internos</a>.",
     footerMeta: "Este proyecto es totalmente de código abierto. Código disponible en <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a>.",
     modalTitle: "¿Por qué no es el 100%?",
     closeBtn: "Cerrar",
@@ -124,7 +124,7 @@ const TRANSLATIONS = {
     thDob: "Birthdate",
     thChamber: "Chamber",
     thParty: "Political Party",
-    footerText: "Income data: Income Redistribution Survey (MHLW). Age data: Records of the Japan Diet (Shugiin & Sangiin).",
+    footerText: "Income data: <a href='https://www.mhlw.go.jp/stf/houdou/96-1_r03kekka.html' target='_blank' class='wiki-link' style='text-decoration: underline;'>Income Redistribution Survey (MHLW)</a>. Age data: <a href='https://www.shugiin.go.jp/internet/index.nsf/html/index.htm' target='_blank' class='wiki-link' style='text-decoration: underline;'>House of Representatives</a> & <a href='https://www.sangiin.go.jp/eng/index.htm' target='_blank' class='wiki-link' style='text-decoration: underline;'>House of Councillors</a>. Turnout: <a href='https://www.soumu.go.jp/senkyo/' target='_blank' class='wiki-link' style='text-decoration: underline;'>Ministry of Internal Affairs</a>.",
     footerMeta: "This project is fully open source. Source code available on <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a>.",
     modalTitle: "Why is it not 100%?",
     closeBtn: "Close",
@@ -213,7 +213,7 @@ const TRANSLATIONS = {
     thDob: "生年月日",
     thChamber: "議院",
     thParty: "所属政党",
-    footerText: "所得データ：厚生労働省「所得再分配調査」。年齢データ：日本国会（衆議院・参議院）公式記録。",
+    footerText: "所得データ：<a href='https://www.mhlw.go.jp/stf/houdou/96-1_r03kekka.html' target='_blank' class='wiki-link' style='text-decoration: underline;'>厚生労働省「所得再分配調査」</a>。年齢データ：<a href='https://www.shugiin.go.jp/' target='_blank' class='wiki-link' style='text-decoration: underline;'>衆議院</a>・<a href='https://www.sangiin.go.jp/' target='_blank' class='wiki-link' style='text-decoration: underline;'>参議院</a>公式記録。投票率：<a href='https://www.soumu.go.jp/senkyo/' target='_blank' class='wiki-link' style='text-decoration: underline;'>総務省公式統計</a>。",
     footerMeta: "このプロジェクトは完全にオープンソースです。ソースコードは <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a> で公開されています。",
     modalTitle: "なぜ100%ではないのですか？",
     closeBtn: "閉じる",
@@ -541,7 +541,7 @@ function updateUILabels() {
   document.getElementById('lbl-th-party').firstChild.textContent = dict.thParty + " ";
   
   // Footer
-  document.getElementById('lbl-footer-text').textContent = dict.footerText;
+  document.getElementById('lbl-footer-text').innerHTML = dict.footerText;
   document.getElementById('lbl-footer-meta').innerHTML = dict.footerMeta;
   
   // Legend Labels
