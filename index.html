@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="html-title">Análisis de Edades — Dieta Nacional de Japón</title>
+  
+  <!-- Google Fonts - Outfit and Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="container header-container">
+      <div class="brand">
+        <span class="flag-icon">🇯🇵</span>
+        <div>
+          <h1 id="app-title">日本国会</h1>
+          <p class="subtitle" id="app-subtitle">Análisis demográfico y de edad de los miembros de la Dieta Nacional de Japón</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="lang-selector" id="lang-selector">
+          <button class="lang-btn active" data-lang="es">ES</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="ja">JA</button>
+        </div>
+        <div class="date-badge" id="date-badge">A fecha de hoy: 19 de julio de 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación por pestañas -->
+  <div class="tabs-nav-bar">
+    <div class="container tabs-nav-container">
+      <button class="tab-btn active" data-tab="tab-members" id="lbl-tab-members">Miembros y Hemiciclo</button>
+      <button class="tab-btn" data-tab="tab-stats" id="lbl-tab-stats">Estadísticas por Partido</button>
+    </div>
+  </div>
+
+  <main class="container main-content">
+    
+    <!-- PESTAÑA 1: MIEMBROS Y HEMICICLO -->
+    <div id="tab-members" class="tab-content active">
+      
+      <!-- Panel de Estadísticas Generales -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label" id="lbl-stat-total">Total analizado</span>
+          <span class="stat-value" id="stat-total">502</span>
+          <span class="stat-meta" id="lbl-stat-total-meta">~98% de escaños totales</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label" id="lbl-stat-avg">Edad Media</span>
+          <span class="stat-value" id="stat-average">57.85</span>
+          <span class="stat-meta" id="lbl-stat-avg-meta">años de edad</span>
+        </div>
+        <div class="stat-card highlight-young">
+          <span class="stat-label" id="lbl-stat-young">Más joven</span>
+          <span class="stat-value-name" id="stat-young-name">Koichiro Nagata</span>
+          <span class="stat-meta-highlight" id="stat-young-meta">26 años — PLD</span>
+        </div>
+        <div class="stat-card highlight-old">
+          <span class="stat-label" id="lbl-stat-old">Más viejo</span>
+          <span class="stat-value-name" id="stat-old-name">Tarō Asō</span>
+          <span class="stat-meta-highlight" id="stat-old-meta">85 años — PLD</span>
+        </div>
+      </section>
+
+      <!-- Representación Visual del Hemiciclo -->
+      <section class="panel-card hemicircle-section">
+        <h2 id="lbl-hemicircle-title">Distribución del Hemiciclo (por Edad)</h2>
+        <p class="panel-desc" id="lbl-hemicircle-desc">Representación visual de los parlamentarios de mayor a menor edad (izquierda a derecha).</p>
+        
+        <div class="hemicircle-controls-row">
+          <div class="control-subgroup">
+            <span id="lbl-view-mode">Representación:</span>
+            <div class="btn-group-mini" id="view-mode-filters">
+              <button class="btn-mini active" data-view="dots" id="lbl-view-dots">Puntos</button>
+              <button class="btn-mini" data-view="bars" id="lbl-view-bars">Barras</button>
+              <button class="btn-mini" data-view="ratio" id="lbl-view-ratio">Representatividad</button>
+            </div>
+          </div>
+          <div class="control-subgroup">
+            <span id="lbl-color-mode">Colorear por:</span>
+            <div class="btn-group-mini" id="color-mode-filters">
+              <button class="btn-mini active" data-mode="age" id="lbl-mode-age">Edad</button>
+              <button class="btn-mini" data-mode="generation" id="lbl-mode-gen">Generaciones</button>
+            </div>
+          </div>
+          <div class="control-subgroup" id="ratio-sub-controls" style="display: none;">
+            <span id="lbl-ratio-sub">Tipo:</span>
+            <div class="btn-group-mini" id="ratio-sub-selector-container">
+              <!-- Dynamically populated in JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <div class="hemicircle-wrapper">
+          <svg id="hemicircle-svg" viewBox="0 0 600 310" width="100%"></svg>
+          <div id="histogram-container" style="display: none;"></div>
+          <div id="hemicircle-tooltip" class="hemicircle-tooltip"></div>
+        </div>
+
+        <!-- Leyenda 1: Rango de Edad -->
+        <div class="hemicircle-legend" id="legend-age-view">
+          <div class="legend-item"><span class="legend-dot" style="background-color: #8c1c1c;"></span> <span id="lbl-legend-70">70+ años</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #ef4444;"></span> <span id="lbl-legend-60">60-69 años</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #f97316;"></span> <span id="lbl-legend-50">50-59 años</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #84cc16;"></span> <span id="lbl-legend-40">40-49 años</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #06b6d4;"></span> <span id="lbl-legend-30">&lt;40 años</span></div>
+        </div>
+
+        <!-- Leyenda 2: Generaciones -->
+        <div class="hemicircle-legend" id="legend-generation-view" style="display: none;">
+          <div class="legend-item"><span class="legend-dot" style="background-color: #8c1c1c;"></span> <span id="lbl-gen-silent">S. Gen / Ant. (81+ años)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #ef4444;"></span> <span id="lbl-gen-boomer">Boomers (62-80 años)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #f97316;"></span> <span id="lbl-gen-x">Gen X (46-61 años)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #84cc16;"></span> <span id="lbl-gen-millennial">Millennials (30-45 años)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background-color: #06b6d4;"></span> <span id="lbl-gen-z">Zoomers (29 o menos)</span></div>
+        </div>
+      </section>
+
+      <!-- Controles de búsqueda y filtrado -->
+      <section class="controls-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Buscar parlamentario por nombre o partido...">
+        </div>
+        <div class="filter-group">
+          <span class="filter-label" id="lbl-chamber">Cámara:</span>
+          <div class="btn-group" id="chamber-filters">
+            <button class="btn active" data-chamber="all" id="lbl-chamber-all">Todas</button>
+            <button class="btn" data-chamber="House of Representatives" id="lbl-chamber-reps">Representantes</button>
+            <button class="btn" data-chamber="House of Councillors" id="lbl-chamber-counc">Consejeros</button>
+          </div>
+        </div>
+        <div class="filter-group select-group">
+          <span class="filter-label" id="lbl-party-filter">Partido:</span>
+          <select id="party-filter-select" class="custom-select">
+            <option value="all" id="lbl-party-all">Todos</option>
+          </select>
+        </div>
+        <div class="filter-group range-group">
+          <span class="filter-label" id="lbl-age-range">Edad:</span>
+          <div class="age-inputs-container">
+            <input type="number" id="age-min" min="20" max="100" value="20" class="age-num-input" title="Mínimo">
+            <span class="range-divider">-</span>
+            <input type="number" id="age-max" min="20" max="100" value="100" class="age-num-input" title="Máximo">
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel Derecho: Listado de Parlamentarios -->
+      <section class="members-panel-full">
+        <div class="panel-card">
+          <div class="panel-header">
+            <h2 id="lbl-table-title">Listado de Parlamentarios</h2>
+            <span class="results-count" id="results-count">502 resultados</span>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th id="lbl-th-name" class="sortable active" data-sort="name">Nombre <span class="sort-icon"></span></th>
+                  <th id="lbl-th-age" class="sortable" data-sort="age">Edad <span class="sort-icon"></span></th>
+                  <th id="lbl-th-dob" class="sortable" data-sort="dob">Nacimiento <span class="sort-icon"></span></th>
+                  <th id="lbl-th-chamber" class="sortable" data-sort="chamber">Cámara <span class="sort-icon"></span></th>
+                  <th id="lbl-th-party" class="sortable" data-sort="party">Partido Político <span class="sort-icon"></span></th>
+                </tr>
+              </thead>
+              <tbody id="members-table-body">
+                <!-- Cargado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginación -->
+          <div class="pagination-container" id="pagination-controls">
+            <!-- Cargado dinámicamente -->
+          </div>
+        </div>
+      </section>
+      
+    </div>
+
+    <!-- PESTAÑA 2: DEMOGRAFÍA POR PARTIDO -->
+    <div id="tab-stats" class="tab-content">
+      <div class="stats-tab-layout">
+        
+        <!-- Panel Izquierdo: Estadísticas de Partidos (Lista) -->
+        <aside class="sidebar-panel">
+          <div class="panel-card">
+            <h2 id="lbl-sidebar-title">Edades Medias por Partido</h2>
+            <p class="panel-desc" id="lbl-sidebar-desc">¿Hay partidos más jóvenes o más viejos? Compáralo aquí:</p>
+            <div class="party-list" id="party-stats-container">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+        </aside>
+
+        <!-- Panel Derecho: Gráfica de Distribución -->
+        <section class="chart-panel">
+          <div class="panel-card">
+            <h2 id="lbl-chart-title">Gráfica Demográfica por Partido</h2>
+            <p class="panel-desc" id="lbl-chart-desc">Comparativa de edad promedio ponderada por número de escaños activos.</p>
+            <div class="chart-wrapper">
+              <canvas id="party-avg-chart"></canvas>
+            </div>
+          </div>
+        </section>
+        
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="container footer-container">
+      <p id="lbl-footer-text">Diseño Minimalista Neutro y Cómodo para la vista. Basado en datos abiertos de Wikipedia y Wikidata.</p>
+      <p class="footer-meta" id="lbl-footer-meta">Proyecto de código abierto. Código disponible en <a href="https://github.com/romero-ivan/japan-diet-stats" target="_blank" class="wiki-link" style="text-decoration: underline;">GitHub</a>.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
