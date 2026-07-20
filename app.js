@@ -35,7 +35,7 @@ const TRANSLATIONS = {
     thDob: "Nacimiento",
     thChamber: "Cámara",
     thParty: "Partido Político",
-    footerText: "Basado en datos abiertos de Wikipedia y Wikidata.",
+    footerText: "Datos de ingresos: Encuesta sobre la Redistribución de Ingresos (MHLW). Datos de edad: Registros de la Dieta de Japón (Shugiin y Sangiin).",
     footerMeta: "Este proyecto es totalmente de código abierto. Código disponible en <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a>.",
     modalTitle: "¿Por qué no es el 100%?",
     closeBtn: "Cerrar",
@@ -53,6 +53,7 @@ const TRANSLATIONS = {
     legend30: "<40 años",
     legendUs1983: "Dieta de Japón (1983)",
     legendJpDiet: "Dieta de Japón (Actual)",
+    axisAgeLabel: "Edad (años)",
     colorMode: "Colorear por:",
     modeAge: "Rango de Edad",
     modeGen: "Generaciones",
@@ -123,7 +124,7 @@ const TRANSLATIONS = {
     thDob: "Birthdate",
     thChamber: "Chamber",
     thParty: "Political Party",
-    footerText: "Based on open data from Wikipedia and Wikidata.",
+    footerText: "Income data: Income Redistribution Survey (MHLW). Age data: Records of the Japan Diet (Shugiin & Sangiin).",
     footerMeta: "This project is fully open source. Source code available on <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a>.",
     modalTitle: "Why is it not 100%?",
     closeBtn: "Close",
@@ -141,6 +142,7 @@ const TRANSLATIONS = {
     legend30: "<40 years",
     legendUs1983: "Japan Diet (1983)",
     legendJpDiet: "Japan Diet (Current)",
+    axisAgeLabel: "Age (years)",
     colorMode: "Color by:",
     modeAge: "Age Range",
     modeGen: "Generations",
@@ -211,7 +213,7 @@ const TRANSLATIONS = {
     thDob: "生年月日",
     thChamber: "議院",
     thParty: "所属政党",
-    footerText: "WikipediaとWikidataのオープンデータに基づいています。",
+    footerText: "所得データ：厚生労働省「所得再分配調査」。年齢データ：日本国会（衆議院・参議院）公式記録。",
     footerMeta: "このプロジェクトは完全にオープンソースです。ソースコードは <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a> で公開されています。",
     modalTitle: "なぜ100%ではないのですか？",
     closeBtn: "閉じる",
@@ -229,6 +231,7 @@ const TRANSLATIONS = {
     legend30: "40歳未満",
     legendUs1983: "日本国会 (1983年)",
     legendJpDiet: "日本国会 (現在)",
+    axisAgeLabel: "年齢 (歳)",
     colorMode: "色分け基準:",
     modeAge: "年齢層",
     modeGen: "世代別",
@@ -1550,6 +1553,16 @@ function applyFiltersAndRender() {
   const histoEl = document.getElementById('histogram-container');
   const subControlsEl = document.getElementById('ratio-sub-controls');
   const colorControlEl = document.getElementById('color-mode-control');
+  const xLabelEl = document.getElementById('histogram-x-label');
+  
+  if (xLabelEl) {
+    if (state.viewMode === 'bars' || state.viewMode === 'comparison') {
+      xLabelEl.style.display = 'block';
+      xLabelEl.textContent = TRANSLATIONS[state.currentLang].axisAgeLabel;
+    } else {
+      xLabelEl.style.display = 'none';
+    }
+  }
   
   if (colorControlEl) {
     colorControlEl.style.display = (state.viewMode === 'dots' || state.viewMode === 'bars') ? 'flex' : 'none';
