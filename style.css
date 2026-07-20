@@ -1694,11 +1694,17 @@ th.sortable.active.desc .sort-icon::after {
 }
 
 /* Colors aligned with Diet page age cohorts */
-.bar-color-17-30 { background-color: #06b6d4; } /* Cyan (<40 cohort) */
-.bar-color-30-40 { background-color: #0284c7; } /* Royal Blue (transition cohort) */
-.bar-color-40-50 { background-color: #84cc16; } /* Green (40-49 cohort) */
-.bar-color-50-65 { background-color: #f97316; } /* Orange (50-59 cohort) */
-.bar-color-65-85 { background-color: #8c1c1c; } /* Dark Red (60+ cohort) */
+.bar-color-0 { background-color: #06b6d4; } /* Cyan (<=29) */
+.bar-color-1 { background-color: #0ea5e9; } /* Sky Blue (30-34) */
+.bar-color-2 { background-color: #3b82f6; } /* Royal Blue (35-39) */
+.bar-color-3 { background-color: #6366f1; } /* Indigo (40-44) */
+.bar-color-4 { background-color: #8b5cf6; } /* Purple (45-49) */
+.bar-color-5 { background-color: #ec4899; } /* Pink (50-54) */
+.bar-color-6 { background-color: #f97316; } /* Orange (55-59) */
+.bar-color-7 { background-color: #eab308; } /* Yellow (60-64) */
+.bar-color-8 { background-color: #84cc16; } /* Lime Green (65-69) */
+.bar-color-9 { background-color: #10b981; } /* Emerald (70-74) */
+.bar-color-10 { background-color: #991b1b; } /* Dark Red (75+) */
 
 /* iPhone/Safari view enhancements for mobile */
 @media (max-width: 600px) {
