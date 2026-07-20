@@ -297,7 +297,7 @@ function getPartyLogoHTML(partyName, size = "20px") {
   // Try to use official local PNG logo first
   const logoFile = PARTY_LOGOS_MAP[cleanName];
   if (logoFile) {
-    return `<img src="logos/${logoFile}" class="party-badge-icon" style="width: ${size}; height: ${size}; border-radius: 50%; object-fit: contain; background-color: #ffffff; padding: 2.5px; border: 1px solid var(--border-light); flex-shrink: 0;" title="${cleanName}">`;
+    return `<img src="logos/${logoFile}" class="party-badge-icon" style="width: ${size}; height: ${size}; border-radius: 50%; object-fit: contain; background-color: transparent; border: none; padding: 0; flex-shrink: 0;" title="${cleanName}">`;
   }
   
   // Fallback to stylized text badge
