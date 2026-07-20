@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="html-title">Análisis de Edades - Dieta Nacional de Japón</title>
+  <title id="html-title">年齢分析 - 日本国会</title>
   
   <!-- Google Fonts - Outfit and Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,16 +20,16 @@
         <span class="flag-icon">🇯🇵</span>
         <div>
           <h1 id="app-title">日本国会</h1>
-          <p class="subtitle" id="app-subtitle">Análisis demográfico y de edad de los miembros de la Dieta Nacional de Japón</p>
+          <p class="subtitle" id="app-subtitle">日本国会（衆議院・参議院）議員の年齢および人口統計分析</p>
         </div>
       </div>
       <div class="header-right">
         <div class="lang-selector" id="lang-selector">
-          <button class="lang-btn active" data-lang="es">ES</button>
+          <button class="lang-btn active" data-lang="ja">JA</button>
           <button class="lang-btn" data-lang="en">EN</button>
-          <button class="lang-btn" data-lang="ja">JA</button>
+          <button class="lang-btn" data-lang="es">ES</button>
         </div>
-        <div class="date-badge" id="date-badge">A fecha de hoy: 19 de julio de 2026</div>
+        <div class="date-badge" id="date-badge">現在：2026年7月19日</div>
       </div>
     </div>
   </header>
@@ -222,10 +222,26 @@
 
   <footer class="app-footer">
     <div class="container footer-container">
-      <p id="lbl-footer-text">Diseño Minimalista Neutro y Cómodo para la vista. Basado en datos abiertos de Wikipedia y Wikidata.</p>
+      <p id="lbl-footer-text">WikipediaとWikidataのオープンデータに基づいています。</p>
       <p class="footer-meta" id="lbl-footer-meta">Proyecto de código abierto. Código disponible en <a href="https://github.com/romero-ivan/japan-diet-stats" target="_blank" class="wiki-link" style="text-decoration: underline;">GitHub</a>.</p>
     </div>
   </footer>
+
+  <!-- Custom Modal Dialog -->
+  <div id="custom-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">なぜ100%ではないのですか？</h3>
+        <button id="modal-close-btn" class="modal-close-icon">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-text"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-action-btn" class="btn-mini active">閉じる</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

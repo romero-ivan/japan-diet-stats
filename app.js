@@ -35,8 +35,10 @@ const TRANSLATIONS = {
     thDob: "Nacimiento",
     thChamber: "Cámara",
     thParty: "Partido Político",
-    footerText: "Diseño Minimalista Neutro y Cómodo para la vista. Basado en datos abiertos de Wikipedia y Wikidata.",
+    footerText: "Basado en datos abiertos de Wikipedia y Wikidata.",
     footerMeta: "Este proyecto es totalmente de código abierto. Código disponible en <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a>.",
+    modalTitle: "¿Por qué no es el 100%?",
+    closeBtn: "Cerrar",
     chamberLabelReps: "Representante",
     chamberLabelCounc: "Consejero",
     independent: "Independiente",
@@ -107,8 +109,10 @@ const TRANSLATIONS = {
     thDob: "Birthdate",
     thChamber: "Chamber",
     thParty: "Political Party",
-    footerText: "Minimalist, eye-friendly neutral design. Based on open data from Wikipedia and Wikidata.",
+    footerText: "Based on open data from Wikipedia and Wikidata.",
     footerMeta: "This project is fully open source. Source code available on <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a>.",
+    modalTitle: "Why is it not 100%?",
+    closeBtn: "Close",
     chamberLabelReps: "Representative",
     chamberLabelCounc: "Councillor",
     independent: "Independent",
@@ -179,8 +183,10 @@ const TRANSLATIONS = {
     thDob: "生年月日",
     thChamber: "議院",
     thParty: "所属政党",
-    footerText: "目に優しいニュートラルなミニマルデザイン。WikipediaとWikidataのオープンデータに基づいています。",
+    footerText: "WikipediaとWikidataのオープンデータに基づいています。",
     footerMeta: "このプロジェクトは完全にオープンソースです。ソースコードは <a href='https://github.com/romero-ivan/japan-diet-stats' target='_blank' class='wiki-link' style='text-decoration: underline;'>GitHub</a> で公開されています。",
+    modalTitle: "なぜ100%ではないのですか？",
+    closeBtn: "閉じる",
     chamberLabelReps: "衆議院議員",
     chamberLabelCounc: "参議院議員",
     independent: "無所属",
@@ -311,7 +317,7 @@ let state = {
   searchQuery: '',
   sortColumn: 'age', // default sort column
   sortDirection: 'asc', // default sort direction (ascending = younger first)
-  currentLang: 'es',
+  currentLang: 'ja',
   currentTab: 'tab-members',
   colorMode: 'age', // default coloring mode: 'age' or 'generation'
   viewMode: 'dots', // default representation mode: 'dots' or 'bars'
@@ -363,9 +369,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Initialize custom modal event handlers
+  const closeModalBtn = document.getElementById('modal-close-btn');
+  const closeActionBtn = document.getElementById('modal-action-btn');
+  const modalOverlay = document.getElementById('custom-modal');
+  
+  if (closeModalBtn) closeModalBtn.onclick = closeModal;
+  if (closeActionBtn) closeActionBtn.onclick = closeModal;
+  if (modalOverlay) {
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) closeModal();
+    };
+  }
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
   // Filter and render initial member list & hemicircle visual
   applyFiltersAndRender();
 });
+
+// Custom Modal Popup Functions
+function showModal(title, text) {
+  const modal = document.getElementById('custom-modal');
+  const mTitle = document.getElementById('modal-title');
+  const mText = document.getElementById('modal-text');
+  
+  if (modal && mTitle && mText) {
+    mTitle.textContent = title;
+    mText.innerHTML = text.replace(/\n/g, '<br>');
+    
+    modal.style.display = 'flex';
+    setTimeout(() => {
+      modal.classList.add('active');
+    }, 10);
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('custom-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 200);
+  }
+}
 
 // ==========================================================================
 // Multilingual Translation Update Helper
@@ -457,6 +508,12 @@ function updateUILabels() {
   const ratioSubLabel = document.getElementById('lbl-ratio-sub');
   if (ratioSubLabel) {
     ratioSubLabel.textContent = dict.ratioType;
+  }
+
+  // Custom Modal Close Button
+  const modalActionBtn = document.getElementById('modal-action-btn');
+  if (modalActionBtn) {
+    modalActionBtn.textContent = dict.closeBtn;
   }
 }
 
@@ -562,6 +619,7 @@ function floorAvg(val, decimals = 1) {
 function calculateGlobalStats() {
   if (state.data.length === 0) return;
 
+  const dict = TRANSLATIONS[state.currentLang];
   const total = state.data.length;
   document.getElementById('stat-total').textContent = total;
 
@@ -571,24 +629,22 @@ function calculateGlobalStats() {
     metaLabel.style.textDecoration = 'underline dashed';
     metaLabel.onclick = () => {
       const explanation = state.currentLang === 'ja' 
-        ? "なぜ100％ではないのですか？\n\n現在、議員の辞職、逝去、または次の補欠選挙による欠員が数議席あるため、また一部の無所属議員のデータ（生年月日等）がWikidataに登録されていないためです。"
+        ? "現在、議員の辞職、逝去、または次の補欠選挙による欠員が数議席あるためです。"
         : (state.currentLang === 'en'
-          ? "Why is it not 100%?\n\nThere are currently a few vacant seats in the Diet due to resignations, deaths, or upcoming by-elections. Additionally, a few minor independent members lack complete data (like birth dates) on Wikidata."
-          : "¿Por qué no es el 100%?\n\nActualmente existen algunos escaños vacantes en la Dieta debido a renuncias, fallecimientos o elecciones parciales pendientes. Además, unos pocos diputados independientes menores carecen de datos completos (como fecha de nacimiento) en Wikidata.");
-      alert(explanation);
+          ? "There are currently a few vacant seats in the Diet due to resignations, deaths, or upcoming by-elections."
+          : "Actualmente existen algunos escaños vacantes en la Dieta debido a renuncias, fallecimientos o elecciones parciales pendientes.");
+      showModal(dict.modalTitle, explanation);
     };
   }
 
   const ages = state.data.map(m => m.age);
   const avg = ages.reduce((a, b) => a + b, 0) / total;
-  document.getElementById('stat-average').textContent = floorAvg(avg, 1);
+  document.getElementById('stat-average').textContent = floorAvg(avg, 0);
 
   // Find youngest and oldest
   const sortedByAge = [...state.data].sort((a, b) => a.age - b.age);
   const youngest = sortedByAge[0];
   const oldest = sortedByAge[sortedByAge.length - 1];
-
-  const dict = TRANSLATIONS[state.currentLang];
 
   // Update Youngest
   document.getElementById('stat-young-name').textContent = getMemberName(youngest);
@@ -682,7 +738,7 @@ function renderPartyStats() {
           <span class="party-count-badge">${party.count} ${labelReps}</span>
         </div>
         <div class="party-avg-badge" style="background-color: ${getAgeColor(party.avg)}">
-          ${floorAvg(party.avg, 1)} ${dict.yearsLabel}
+          ${floorAvg(party.avg, 0)} ${dict.yearsLabel}
         </div>
       </div>
       <div class="party-distribution-bar-wrapper">
@@ -747,7 +803,7 @@ function updatePartyChart(partyList) {
           padding: 10,
           callbacks: {
             label: function(context) {
-              const val = floorAvg(context.parsed.y, 1);
+              const val = floorAvg(context.parsed.y, 0);
               const count = counts[context.dataIndex];
               const unit = state.currentLang === 'ja' ? '歳平均' : (state.currentLang === 'en' ? ' years average' : ' años promedio');
               const countUnit = state.currentLang === 'ja' ? ` (${count}議席)` : (state.currentLang === 'en' ? ` (${count} seats)` : ` (${count} escaños)`);
