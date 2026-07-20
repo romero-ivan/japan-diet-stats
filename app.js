@@ -287,7 +287,8 @@ const PARTY_LOGOS_MAP = {
   "れいわ新選組": "reiwa.png", "Reiwa Shinsengumi": "reiwa.png",
   "社会民主党": "sdp.png", "Social Democratic Party": "sdp.png", "Partido Socialdemócrata": "sdp.png",
   "参政党": "sanseito.png", "Sanseito": "sanseito.png",
-  "日本保守党": "conservative.png", "Conservative Party of Japan": "conservative.png", "Partido Conservador de Japón": "conservative.png"
+  "日本保守党": "conservative.png", "Conservative Party of Japan": "conservative.png", "Partido Conservador de Japón": "conservative.png",
+  "中道改革連合": "cra.png", "Centrist Reform Alliance": "cra.png"
 };
 
 function getPartyLogoHTML(partyName, size = "20px") {
