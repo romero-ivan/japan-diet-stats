@@ -1747,15 +1747,15 @@ th.sortable.active.desc .sort-icon::after {
   gap: 2px;
 }
 
-.histo-bar.us-series {
-  background-color: #3b82f6 !important; /* Blue for US Congress 1983 */
+.histo-bar.jp1983-series {
+  background-color: #3b82f6 !important; /* Blue for Japan Diet 1983 */
   width: 50%;
   border-radius: 2px 2px 0 0;
   transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   min-height: 0 !important;
 }
 
-.histo-bar.jp-series {
+.histo-bar.jp-current-series {
   background-color: #f43f5e !important; /* Rose/Red for Japan Diet current */
   width: 50%;
   border-radius: 2px 2px 0 0;

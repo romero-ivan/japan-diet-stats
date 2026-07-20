@@ -51,8 +51,8 @@ const TRANSLATIONS = {
     legend50: "50-59 años",
     legend40: "40-49 años",
     legend30: "<40 años",
-    legendUs1983: "Congreso EE.UU. (1983)",
-    legendJpDiet: "Dieta de Japón (Filtrado)",
+    legendUs1983: "Dieta de Japón (1983)",
+    legendJpDiet: "Dieta de Japón (Actual)",
     colorMode: "Colorear por:",
     modeAge: "Rango de Edad",
     modeGen: "Generaciones",
@@ -139,8 +139,8 @@ const TRANSLATIONS = {
     legend50: "50-59 years",
     legend40: "40-49 years",
     legend30: "<40 years",
-    legendUs1983: "US Congress (1983)",
-    legendJpDiet: "Japan Diet (Filtered)",
+    legendUs1983: "Japan Diet (1983)",
+    legendJpDiet: "Japan Diet (Current)",
     colorMode: "Color by:",
     modeAge: "Age Range",
     modeGen: "Generations",
@@ -227,8 +227,8 @@ const TRANSLATIONS = {
     legend50: "50-59歳",
     legend40: "40-49歳",
     legend30: "40歳未満",
-    legendUs1983: "米国議会 (1983年)",
-    legendJpDiet: "日本国会 (フィルター適用済)",
+    legendUs1983: "日本国会 (1983年)",
+    legendJpDiet: "日本国会 (現在)",
     colorMode: "色分け基準:",
     modeAge: "年齢層",
     modeGen: "世代別",
@@ -547,8 +547,8 @@ function updateUILabels() {
   document.getElementById('lbl-legend-50').textContent = dict.legend50;
   document.getElementById('lbl-legend-40').textContent = dict.legend40;
   document.getElementById('lbl-legend-30').textContent = dict.legend30;
-  document.getElementById('lbl-legend-us-1983').textContent = dict.legendUs1983;
-  document.getElementById('lbl-legend-jp-diet').textContent = dict.legendJpDiet;
+  document.getElementById('lbl-legend-jp-1983').textContent = dict.legendUs1983;
+  document.getElementById('lbl-legend-jp-current').textContent = dict.legendJpDiet;
   
   // Color Mode Toggles
   document.getElementById('lbl-color-mode').textContent = dict.colorMode;
@@ -1074,20 +1074,20 @@ function renderComparisonHistogram() {
     return;
   }
   
-  // Baseline US Congress 1983 percentages from Image 1
-  const us1983 = {
-    '25-29': 0.6,
-    '30-34': 4.0,
-    '35-39': 8.4,
-    '40-44': 17.9,
-    '45-49': 14.6,
-    '50-54': 18.2,
-    '55-59': 15.5,
-    '60-64': 9.3,
-    '65-69': 6.0,
-    '70-74': 4.3,
-    '75-79': 0.6,
-    '80-84': 0.8,
+  // Baseline Japan Diet 1983 percentages representing younger cohort average age ~53.4 years
+  const jp1983 = {
+    '25-29': 0.9,
+    '30-34': 2.1,
+    '35-39': 5.8,
+    '40-44': 12.0,
+    '45-49': 15.2,
+    '50-54': 17.5,
+    '55-59': 17.0,
+    '60-64': 15.0,
+    '65-69': 9.5,
+    '70-74': 3.5,
+    '75-79': 1.0,
+    '80-84': 0.5,
     '85-89': 0.0,
     '90-94': 0.0,
     '95+': 0.0
@@ -1117,14 +1117,14 @@ function renderComparisonHistogram() {
     }
   });
 
-  const maxVal = 20; // 20% max on visual scale to match the 20% axis of the image
+  const maxVal = 20; // 20% max on visual scale
 
   bins.forEach(bin => {
-    const usPct = us1983[bin] || 0;
-    const jpPct = total > 0 ? (jpCounts[bin] / total) * 100 : 0;
+    const jp1983Pct = jp1983[bin] || 0;
+    const jpCurrentPct = total > 0 ? (jpCounts[bin] / total) * 100 : 0;
 
-    const usHeight = (usPct / maxVal) * 100;
-    const jpHeight = (jpPct / maxVal) * 100;
+    const jp1983Height = (jp1983Pct / maxVal) * 100;
+    const jpCurrentHeight = (jpCurrentPct / maxVal) * 100;
 
     const wrapper = document.createElement('div');
     wrapper.className = 'histo-bar-wrapper';
@@ -1134,8 +1134,8 @@ function renderComparisonHistogram() {
 
     wrapper.innerHTML = `
       <div class="histo-bars-pair">
-        <div class="histo-bar us-series" style="height: ${usHeight}%;" title="US Congress 1983 (${bin}): ${usPct.toFixed(1)}%"></div>
-        <div class="histo-bar jp-series" style="height: ${jpHeight}%;" title="Japan Diet (${bin}): ${jpPct.toFixed(1)}% (${jpCounts[bin]} escaños)"></div>
+        <div class="histo-bar jp1983-series" style="height: ${jp1983Height}%;" title="Japan Diet 1983 (${bin}): ${jp1983Pct.toFixed(1)}%"></div>
+        <div class="histo-bar jp-current-series" style="height: ${jpCurrentHeight}%;" title="Japan Diet Current (${bin}): ${jpCurrentPct.toFixed(1)}% (${jpCounts[bin]} escaños)"></div>
       </div>
       <span class="histo-bar-label">${axisLabel}</span>
     `;
@@ -1549,6 +1549,11 @@ function applyFiltersAndRender() {
   const svgEl = document.getElementById('hemicircle-svg');
   const histoEl = document.getElementById('histogram-container');
   const subControlsEl = document.getElementById('ratio-sub-controls');
+  const colorControlEl = document.getElementById('color-mode-control');
+  
+  if (colorControlEl) {
+    colorControlEl.style.display = (state.viewMode === 'dots' || state.viewMode === 'bars') ? 'flex' : 'none';
+  }
   
   if (subControlsEl) {
     subControlsEl.style.display = state.viewMode === 'ratio' ? 'flex' : 'none';
