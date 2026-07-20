@@ -274,21 +274,52 @@ const PARTY_BADGES = {
   "チームしが": { ja: "滋賀", en: "TS", bg: "#0284c7", border: "#0369a1" },
   "無所属": { ja: "無所属", en: "IND", bg: "#736d55", border: "#5a5542" },
   "減税日本": { ja: "減税", en: "GZ", bg: "#d97706", border: "#b45309" },
-  "減税日本・ゆうこく連合": { ja: "減税", en: "GZ", bg: "#d97706", border: "#b45309" }
+};
+
+// Map clean party names to official local logo files
+const PARTY_LOGOS_MAP = {
+  "自由民主党": "ldp.png", "Liberal Democratic Party": "ldp.png", "Partido Liberal Democrático": "ldp.png",
+  "立憲民主党": "cdp.png", "Constitutional Democratic Party": "cdp.png", "Partido Democrático Constitucional": "cdp.png",
+  "日本維新の会": "jip.png", "Japan Innovation Party": "jip.png", "Asociación para la Innovación de Japón": "jip.png",
+  "公明党": "komeito.png", "Komeito": "komeito.png",
+  "国民民主党": "dpfp.png", "Democratic Party for the People": "dpfp.png", "Partido Democrático para el Pueblo": "dpfp.png",
+  "日本共産党": "jcp.png", "Japanese Communist Party": "jcp.png", "Partido Comunista Japonés": "jcp.png",
+  "れいわ新選組": "reiwa.png", "Reiwa Shinsengumi": "reiwa.png",
+  "社会民主党": "sdp.png", "Social Democratic Party": "sdp.png", "Partido Socialdemócrata": "sdp.png",
+  "参政党": "sanseito.png", "Sanseito": "sanseito.png",
+  "日本保守党": "conservative.png", "Conservative Party of Japan": "conservative.png", "Partido Conservador de Japón": "conservative.png"
 };
 
 function getPartyLogoHTML(partyName, size = "20px") {
   if (!partyName) return '';
   const cleanName = partyName.trim();
+  
+  // Try to use official local PNG logo first
+  const logoFile = PARTY_LOGOS_MAP[cleanName];
+  if (logoFile) {
+    return `<img src="logos/${logoFile}" class="party-badge-icon" style="width: ${size}; height: ${size}; border-radius: 50%; object-fit: contain; background-color: #ffffff; padding: 2.5px; border: 1px solid var(--border-light); flex-shrink: 0;" title="${cleanName}">`;
+  }
+  
+  // Fallback to stylized text badge
   const badge = PARTY_BADGES[cleanName];
   if (badge) {
     const text = state.currentLang === 'ja' ? badge.ja : badge.en;
     const isJa = state.currentLang === 'ja';
-    const widthStyle = isJa ? `width: ${size};` : `width: calc(${size} * 1.35); border-radius: 12px;`;
+    let widthStyle = '';
+    if (isJa) {
+      if (text.length > 2) {
+        widthStyle = `width: auto; padding: 0 6px; border-radius: 12px;`;
+      } else {
+        widthStyle = `width: ${size}; border-radius: 50%;`;
+      }
+    } else {
+      widthStyle = `width: calc(${size} * 1.35); border-radius: 12px;`;
+    }
     return `<span class="party-badge-icon" style="background-color: ${badge.bg}; border: 1px solid ${badge.border}; color: #ffffff; ${widthStyle} height: ${size}; line-height: calc(${size} - 2px); font-size: calc(${size} * ${isJa ? '0.5' : '0.45'});" title="${cleanName}">${text}</span>`;
   }
+  
   const abbr = getPartyAbbr(cleanName).substring(0, 2);
-  return `<span class="party-badge-icon fallback" style="background-color: #736d55; border: 1px solid #5a5542; color: #ffffff; width: ${size}; height: ${size}; line-height: calc(${size} - 2px); font-size: calc(${size} * 0.45);" title="${cleanName}">${abbr}</span>`;
+  return `<span class="party-badge-icon fallback" style="background-color: #736d55; border: 1px solid #5a5542; color: #ffffff; width: ${size}; height: ${size}; line-height: calc(${size} - 2px); font-size: calc(${size} * 0.45); border-radius: 50%;" title="${cleanName}">${abbr}</span>`;
 }
 
 function getActiveParty(m) {
