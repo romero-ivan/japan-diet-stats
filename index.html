@@ -34,13 +34,6 @@
     </div>
   </header>
 
-  <!-- Navegación por pestañas -->
-  <div class="tabs-nav-bar">
-    <div class="container tabs-nav-container">
-      <button class="tab-btn active" data-tab="tab-members" id="lbl-tab-members">Miembros y Hemiciclo</button>
-      <button class="tab-btn" data-tab="tab-stats" id="lbl-tab-stats">Estadísticas por Partido</button>
-    </div>
-  </div>
 
   <main class="container main-content">
     
@@ -189,34 +182,6 @@
       
     </div>
 
-    <!-- PESTAÑA 2: DEMOGRAFÍA POR PARTIDO -->
-    <div id="tab-stats" class="tab-content">
-      <div class="stats-tab-layout">
-        
-        <!-- Panel Izquierdo: Estadísticas de Partidos (Lista) -->
-        <aside class="sidebar-panel">
-          <div class="panel-card">
-            <h2 id="lbl-sidebar-title">Edades Medias por Partido</h2>
-            <p class="panel-desc" id="lbl-sidebar-desc">¿Hay partidos más jóvenes o más viejos? Compáralo aquí:</p>
-            <div class="party-list" id="party-stats-container">
-              <!-- Cargado dinámicamente -->
-            </div>
-          </div>
-        </aside>
-
-        <!-- Panel Derecho: Gráfica de Distribución -->
-        <section class="chart-panel">
-          <div class="panel-card">
-            <h2 id="lbl-chart-title">Gráfica Demográfica por Partido</h2>
-            <p class="panel-desc" id="lbl-chart-desc">Comparativa de edad promedio ponderada por número de escaños activos.</p>
-            <div class="chart-wrapper">
-              <canvas id="party-avg-chart"></canvas>
-            </div>
-          </div>
-        </section>
-        
-      </div>
-    </div>
 
   </main>
 
@@ -244,7 +209,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

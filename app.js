@@ -357,9 +357,6 @@ let state = {
   wasFiltered: false
 };
 
-// Global ChartInstance
-let partyChart = null;
-
 // Initial setup
 document.addEventListener('DOMContentLoaded', () => {
   // Load saved language preference
@@ -464,9 +461,6 @@ function updateUILabels() {
   document.getElementById('app-subtitle').textContent = dict.appSubtitle;
   document.getElementById('date-badge').textContent = dict.dateBadge;
   
-  // Tab Headers
-  document.getElementById('lbl-tab-members').textContent = dict.tabMembers;
-  document.getElementById('lbl-tab-stats').textContent = dict.tabStats;
   
   // Stats labels
   document.getElementById('lbl-stat-total').textContent = dict.statTotal;
@@ -491,13 +485,6 @@ function updateUILabels() {
   document.getElementById('lbl-party-all').textContent = dict.partyAll;
   document.getElementById('lbl-age-range').textContent = dict.ageRange;
   
-  // Chart tab
-  document.getElementById('lbl-chart-title').textContent = dict.chartTitle;
-  document.getElementById('lbl-chart-desc').textContent = dict.chartDesc;
-  
-  // Sidebar
-  document.getElementById('lbl-sidebar-title').textContent = dict.sidebarTitle;
-  document.getElementById('lbl-sidebar-desc').textContent = dict.sidebarDesc;
   
   // Table Headers
   document.getElementById('lbl-table-title').textContent = dict.tableTitle;
@@ -689,180 +676,6 @@ function calculateGlobalStats() {
   document.getElementById('stat-old-meta').textContent = dict.statOldMeta
     .replace('{age}', oldest.age)
     .replace('{party}', getMemberMainPartyName(oldest));
-}
-
-function renderPartyStats() {
-  const dict = TRANSLATIONS[state.currentLang];
-  
-  // Group ages by party using currently filtered data for reactivity!
-  const partyGroups = {};
-  state.filteredData.forEach(m => {
-    const p = getActiveParty(m);
-    if (!p) return;
-    const mainPartyName = state.currentLang === 'ja' ? p.ja : (state.currentLang === 'en' ? p.en : p.es);
-    if (!partyGroups[mainPartyName]) {
-      partyGroups[mainPartyName] = {
-        jaName: p.ja, // Store original Japanese name for logo lookup
-        ages: [],
-        count70: 0,
-        count60: 0,
-        count50: 0,
-        count40: 0,
-        count30: 0,
-        wiki_url: p.wiki_url
-      };
-    }
-    partyGroups[mainPartyName].ages.push(m.age);
-    if (m.age >= 70) partyGroups[mainPartyName].count70++;
-    else if (m.age >= 60) partyGroups[mainPartyName].count60++;
-    else if (m.age >= 50) partyGroups[mainPartyName].count50++;
-    else if (m.age >= 40) partyGroups[mainPartyName].count40++;
-    else partyGroups[mainPartyName].count30++;
-  });
-
-  // Calculate stats for each party
-  const partyList = [];
-  for (const [name, info] of Object.entries(partyGroups)) {
-    if (info.ages.length < 1 || name === dict.independent) continue;
-    const avg = info.ages.reduce((a, b) => a + b, 0) / info.ages.length;
-    const total = info.ages.length;
-    partyList.push({
-      name: name,
-      jaName: info.jaName,
-      avg: avg,
-      count: total,
-      pct70: (info.count70 / total) * 100,
-      pct60: (info.count60 / total) * 100,
-      pct50: (info.count50 / total) * 100,
-      pct40: (info.count40 / total) * 100,
-      pct30: (info.count30 / total) * 100,
-      wiki_url: info.wiki_url
-    });
-  }
-
-  // Sort by count (most members first)
-  partyList.sort((a, b) => b.count - a.count);
-
-  // Render Sidebar List
-  const container = document.getElementById('party-stats-container');
-  if (!container) return;
-  container.innerHTML = '';
-
-  if (partyList.length === 0) {
-    container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 15px;">${dict.noResults}</div>`;
-  }
-
-  partyList.forEach(party => {
-    const item = document.createElement('div');
-    item.className = 'party-stat-item';
-
-    const logoHTML = getPartyLogoHTML(party.jaName, "24px");
-    const partyNameHTML = party.wiki_url 
-      ? `<a href="${party.wiki_url}" target="_blank" class="party-sidebar-title-wrapper" title="${party.name}" style="text-decoration: none;">${logoHTML}</a>`
-      : `<span class="party-sidebar-title-wrapper" title="${party.name}">${logoHTML}</span>`;
-
-    const labelReps = state.currentLang === 'ja' ? '議席' : (state.currentLang === 'en' ? 'seats' : 'escaños');
-
-    item.innerHTML = `
-      <div class="party-info-row">
-        <div class="party-header-left">
-          ${partyNameHTML}
-          <span class="party-count-badge">${party.count} ${labelReps}</span>
-        </div>
-        <div class="party-avg-badge" style="background-color: ${getAgeColor(party.avg)}">
-          ${floorAvg(party.avg, 0)} ${dict.yearsLabel}
-        </div>
-      </div>
-      <div class="party-distribution-bar-wrapper">
-        <div class="party-distribution-bar">
-          ${party.pct70 > 0 ? `<div class="dist-segment" style="width: ${party.pct70}%; background-color: #8c1c1c;" title="70+ años: ${party.pct70.toFixed(0)}%"></div>` : ''}
-          ${party.pct60 > 0 ? `<div class="dist-segment" style="width: ${party.pct60}%; background-color: #ef4444;" title="60-69 años: ${party.pct60.toFixed(0)}%"></div>` : ''}
-          ${party.pct50 > 0 ? `<div class="dist-segment" style="width: ${party.pct50}%; background-color: #f97316;" title="50-59 años: ${party.pct50.toFixed(0)}%"></div>` : ''}
-          ${party.pct40 > 0 ? `<div class="dist-segment" style="width: ${party.pct40}%; background-color: #84cc16;" title="40-49 años: ${party.pct40.toFixed(0)}%"></div>` : ''}
-          ${party.pct30 > 0 ? `<div class="dist-segment" style="width: ${party.pct30}%; background-color: #06b6d4;" title="&lt;40 años: ${party.pct30.toFixed(0)}%"></div>` : ''}
-        </div>
-      </div>
-    `;
-    container.appendChild(item);
-  });
-
-  // Render/Update Chart.js Graphic
-  updatePartyChart(partyList);
-}
-
-function updatePartyChart(partyList) {
-  const chartCanvas = document.getElementById('party-avg-chart');
-  if (!chartCanvas) return;
-  const ctx = chartCanvas.getContext('2d');
-  
-  const labels = partyList.map(p => p.name);
-  const data = partyList.map(p => p.avg);
-  const counts = partyList.map(p => p.count);
-  
-  // Gradient coloring matching the age sweeps
-  const backgroundColors = partyList.map(p => getAgeColor(p.avg));
-  
-  if (partyChart) {
-    partyChart.destroy();
-  }
-  
-  const textCol = '#332f22';
-  const gridCol = 'rgba(51, 47, 34, 0.08)';
-  
-  partyChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: data,
-        backgroundColor: backgroundColors,
-        borderRadius: 6,
-        borderWidth: 0,
-        barThickness: Math.max(12, Math.min(28, 400 / (labels.length || 1)))
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: isDark ? '#1e293b' : '#0f172a',
-          titleColor: '#ffffff',
-          bodyColor: '#e2e8f0',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          padding: 10,
-          callbacks: {
-            label: function(context) {
-              const val = floorAvg(context.parsed.y, 0);
-              const count = counts[context.dataIndex];
-              const unit = state.currentLang === 'ja' ? '歳平均' : (state.currentLang === 'en' ? ' years average' : ' años promedio');
-              const countUnit = state.currentLang === 'ja' ? ` (${count}議席)` : (state.currentLang === 'en' ? ` (${count} seats)` : ` (${count} escaños)`);
-              return `${val}${unit}${countUnit}`;
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          min: 30,
-          max: 80,
-          ticks: { color: textCol, font: { family: 'Inter' } },
-          grid: { color: gridCol }
-        },
-        x: {
-          ticks: { 
-            color: textCol, 
-            font: { family: 'Outfit', weight: '500' },
-            maxRotation: 45,
-            minRotation: 0
-          },
-          grid: { display: false }
-        }
-      }
-    }
-  });
 }
 
 // ==========================================================================
@@ -1474,7 +1287,6 @@ function applyFiltersAndRender() {
   }
 
   renderMembersTable();
-  renderPartyStats();
   updateHeaderIndicators();
 }
 
@@ -1600,26 +1412,6 @@ function renderPaginationControls() {
 // Event Listeners Initialization
 // ==========================================================================
 function initEventListeners() {
-  const tabButtons = document.querySelectorAll('.tabs-nav-bar .tab-btn');
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const targetTab = e.target.getAttribute('data-tab');
-      tabButtons.forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      
-      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-      document.getElementById(targetTab).classList.add('active');
-      
-      state.currentTab = targetTab;
-      
-      if (targetTab === 'tab-stats') {
-        setTimeout(() => {
-          renderPartyStats();
-        }, 50);
-      }
-    });
-  });
-
   const searchInput = document.getElementById('search-input');
   searchInput.addEventListener('input', (e) => {
     state.searchQuery = e.target.value;
