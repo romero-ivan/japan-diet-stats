@@ -82,7 +82,7 @@ const TRANSLATIONS = {
     conceptDisposableDesc: "Ingreso neto disponible después de deducir impuestos y cotizaciones a la Seguridad Social",
     conceptExtendedTitle: "再分配所得 (Ingreso disponible ampliado)",
     conceptExtendedDesc: "Ingreso disponible neto más transferencias públicas en especie (sanidad y educación)",
-    incomeDataSource: "Datos de ingresos equivalentes reales. Fuente: Estimación estadística basada en la <a href=\"https://www.mhlw.go.jp/toukei/list/25-1.html\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">Encuesta sobre la Redistribución de Ingresos</a> del Ministerio de Salud, Trabajo y Bienestar de Japón (ingresos de 2022)."
+    incomeDataSource: "Datos de ingresos equivalentes reales. Fuente: Estimación estadística basada en la <a href=\"https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450422\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">Encuesta sobre la Redistribución de Ingresos</a> del Ministerio de Salud, Trabajo y Bienestar de Japón (ingresos de 2022)."
   },
   en: {
     title: "Age Analysis - National Diet of Japan",
@@ -167,7 +167,7 @@ const TRANSLATIONS = {
     conceptDisposableDesc: "Net take-home income after deducting direct taxes and social security contributions",
     conceptExtendedTitle: "再分配所得 (Extended disposable income)",
     conceptExtendedDesc: "Disposable income plus public in-kind transfers (health care and education services)",
-    incomeDataSource: "Equivalized income data. Source: Statistical estimation based on the <a href=\"https://www.mhlw.go.jp/toukei/list/25-1.html\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">Survey on the Redistribution of Income</a> by the Ministry of Health, Labour and Welfare of Japan (2022 income)."
+    incomeDataSource: "Equivalized income data. Source: Statistical estimation based on the <a href=\"https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450422\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">Survey on the Redistribution of Income</a> by the Ministry of Health, Labour and Welfare of Japan (2022 income)."
   },
   ja: {
     title: "年齢分析 - 日本国会",
@@ -252,7 +252,7 @@ const TRANSLATIONS = {
     conceptDisposableDesc: "総所得から税金・社会保険料を差し引いた手取り所得",
     conceptExtendedTitle: "再分配所得 (Extended disposable income)",
     conceptExtendedDesc: "可処分所得に医療・教育等の現物給付（政府サービス）を加えたもの",
-    incomeDataSource: "等価所得ベースの実データ。出典：厚生労働省<a href=\"https://www.mhlw.go.jp/toukei/list/25-1.html\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">「所得再分配調査」</a>に基づく統計推計（2022年所得）。"
+    incomeDataSource: "等価所得ベースの実データ。出典：厚生労働省<a href=\"https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450422\" target=\"_blank\" class=\"wiki-link\" style=\"text-decoration: underline;\">「所得再分配調査」</a>に基づく統計推計（2022年所得）。"
   }
 };
 
